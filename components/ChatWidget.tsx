@@ -97,7 +97,8 @@ export default function ChatWidget() {
     <>
       <button
         onClick={() => setOpen((o) => !o)}
-        aria-label="Chat"
+        aria-label={open ? "Close chat" : "Open chat"}
+        aria-expanded={open}
         className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-white text-black text-2xl shadow-lg hover:bg-zinc-200 transition-colors z-50"
       >
         {open ? "✕" : "💬"}
@@ -107,14 +108,16 @@ export default function ChatWidget() {
         <div className="fixed bottom-24 right-6 w-[min(92vw,380px)] h-[480px] max-h-[70vh] bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50">
           <div className="px-4 py-3 border-b border-zinc-800">
             <p className="font-semibold text-sm">Ask Nate&apos;s AI</p>
-            <p className="text-xs text-zinc-500">
+            <p className="text-xs text-zinc-400">
               Answers about me, on my behalf
             </p>
           </div>
 
-          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-sm">
+          <div className="flex-1 overflow-y-auto px-4 py-3 space-y-3 text-sm"
+            aria-live="polite"
+          >
             {messages.length === 0 && (
-              <p className="text-zinc-500">
+              <p className="text-zinc-400">
                 Hi! Ask me about my background, work, or projects.
               </p>
             )}
@@ -149,7 +152,8 @@ export default function ChatWidget() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask something…"
-              className="flex-1 bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-sm outline-none focus:border-zinc-400"
+              aria-label="Your message"
+              className="flex-1 bg-zinc-900 border border-zinc-500 rounded-xl px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-400 outline-none focus:border-zinc-200"
             />
             <button
               type="submit"
