@@ -39,3 +39,8 @@ jobs:
         with:
           app-name: natewang-site
           package: .next/standalone
+          startup-command: "node server.js"
+          # Remove files from previous deploys and restart so the new build
+          # (including prerendered pages cached in memory) is actually served.
+          clean: true
+          restart: true
