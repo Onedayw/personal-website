@@ -1,5 +1,4 @@
 import Image from "next/image";
-import AskCard from "../components/AskCard";
 import ChatWidget from "../components/ChatWidget";
 import portrait from "../public/nate.jpg";
 
@@ -55,10 +54,6 @@ export default function Home() {
           LinkedIn
         </a>
       </div>
-
-      <section className="max-w-xl w-full border-t border-zinc-800 pt-10">
-        <AskCard />
-      </section>
 
       <ChatWidget />
     </main>

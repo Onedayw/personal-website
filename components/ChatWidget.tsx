@@ -4,9 +4,6 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import avatar from "../public/avatar.jpg";
 
-/** Dispatch on window to open the chat from elsewhere on the page. */
-export const OPEN_CHAT_EVENT = "open-chat";
-
 type Message = { role: "user" | "assistant"; content: string };
 
 export default function ChatWidget() {
@@ -17,12 +14,6 @@ export default function ChatWidget() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
-
-  useEffect(() => {
-    const openChat = () => setOpen(true);
-    window.addEventListener(OPEN_CHAT_EVENT, openChat);
-    return () => window.removeEventListener(OPEN_CHAT_EVENT, openChat);
-  }, []);
 
   // Close on a click/tap outside the panel (the toggle button handles itself)
   // or on Escape.
@@ -154,6 +145,16 @@ export default function ChatWidget() {
           />
         )}
       </button>
+
+      {!open && (
+        <button
+          type="button"
+          onClick={() => setOpen(true)}
+          className="fixed bottom-9 right-[92px] z-50 rounded-2xl rounded-br-sm bg-white px-4 py-2 text-sm font-medium text-black shadow-lg shadow-black/40 whitespace-nowrap hover:bg-zinc-100 motion-safe:animate-float"
+        >
+          Ask my AI anything 👋
+        </button>
+      )}
 
       {open && (
         <div
