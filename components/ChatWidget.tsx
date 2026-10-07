@@ -1,6 +1,8 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
+import avatar from "../public/avatar.jpg";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -129,9 +131,19 @@ export default function ChatWidget() {
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? "Close chat" : "Open chat"}
         aria-expanded={open}
-        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-white text-black text-2xl shadow-lg hover:bg-zinc-200 transition-colors z-50"
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full overflow-hidden bg-white text-black text-2xl shadow-lg ring-2 ring-zinc-200 hover:ring-white hover:scale-105 transition z-50"
       >
-        {open ? "✕" : "💬"}
+        {open ? (
+          "✕"
+        ) : (
+          <Image
+            src={avatar}
+            alt=""
+            width={56}
+            height={56}
+            className="size-full object-cover"
+          />
+        )}
       </button>
 
       {open && (
