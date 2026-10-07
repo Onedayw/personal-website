@@ -26,10 +26,7 @@ export default function ChatWidget() {
         body: JSON.stringify({ messages: next.slice(-10) }),
       });
 
-      if (!res.ok || !res.body) {
-        throw new Error(`chat failed: ${res.status}`);
-      }
-
+      // JSON responses (including errors like 429/502) carry a message to show.
       const contentType = res.headers.get("content-type") ?? "";
       if (contentType.includes("application/json")) {
         const data = await res.json();
@@ -39,10 +36,15 @@ export default function ChatWidget() {
             role: "assistant",
             content:
               data.reply ??
+              data.error ??
               "Sorry — the chat backend isn't configured yet. Check back soon.",
           },
         ]);
         return;
+      }
+
+      if (!res.ok || !res.body) {
+        throw new Error(`chat failed: ${res.status}`);
       }
 
       // Stream SSE tokens.
@@ -105,7 +107,7 @@ export default function ChatWidget() {
       </button>
 
       {open && (
-        <div className="fixed bottom-24 right-6 w-[min(92vw,380px)] h-[480px] max-h-[70vh] bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50">
+        <div className="fixed bottom-24 inset-x-3 sm:inset-x-auto sm:right-6 sm:w-[380px] h-[min(480px,calc(100dvh-8rem))] text-left bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50">
           <div className="px-4 py-3 border-b border-zinc-800">
             <p className="font-semibold text-sm">Ask Nate&apos;s AI</p>
             <p className="text-xs text-zinc-400">
@@ -153,7 +155,8 @@ export default function ChatWidget() {
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ask something…"
               aria-label="Your message"
-              className="flex-1 bg-zinc-900 border border-zinc-500 rounded-xl px-3 py-2 text-sm text-zinc-100 placeholder:text-zinc-400 outline-none focus:border-zinc-200"
+              enterKeyHint="send"
+              className="flex-1 bg-zinc-900 border border-zinc-500 rounded-xl px-3 py-2 text-base sm:text-sm text-zinc-100 placeholder:text-zinc-400 outline-none focus:border-zinc-200"
             />
             <button
               type="submit"

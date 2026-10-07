@@ -77,6 +77,10 @@ export async function POST(req: Request) {
   });
 
   if (!upstream.ok || !upstream.body) {
+    const detail = await upstream.text().catch(() => "");
+    console.error(
+      `AI provider error: ${upstream.status} from ${baseUrl} (model ${model}): ${detail.slice(0, 500)}`
+    );
     return Response.json(
       { reply: "The AI provider returned an error — try again in a bit." },
       { status: 502 }
