@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Message = { role: "user" | "assistant"; content: string };
 
@@ -10,6 +10,33 @@ export default function ChatWidget() {
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+
+  // Close on a click/tap outside the panel (the toggle button handles itself)
+  // or on Escape.
+  useEffect(() => {
+    if (!open) return;
+    function onPointerDown(e: PointerEvent) {
+      const target = e.target as Node;
+      if (
+        panelRef.current?.contains(target) ||
+        toggleRef.current?.contains(target)
+      ) {
+        return;
+      }
+      setOpen(false);
+    }
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") setOpen(false);
+    }
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("keydown", onKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open]);
 
   async function send() {
     const text = input.trim();
@@ -98,6 +125,7 @@ export default function ChatWidget() {
   return (
     <>
       <button
+        ref={toggleRef}
         onClick={() => setOpen((o) => !o)}
         aria-label={open ? "Close chat" : "Open chat"}
         aria-expanded={open}
@@ -107,7 +135,9 @@ export default function ChatWidget() {
       </button>
 
       {open && (
-        <div className="fixed bottom-24 inset-x-3 sm:inset-x-auto sm:right-6 sm:w-[380px] h-[min(480px,calc(100dvh-8rem))] text-left bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50">
+        <div
+          ref={panelRef}
+          className="fixed bottom-24 inset-x-3 sm:inset-x-auto sm:right-6 sm:w-[380px] h-[min(480px,calc(100dvh-8rem))] text-left bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden z-50">
           <div className="px-4 py-3 border-b border-zinc-800">
             <p className="font-semibold text-sm">Ask Nate&apos;s AI</p>
             <p className="text-xs text-zinc-400">
