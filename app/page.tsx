@@ -1,4 +1,5 @@
 import Image from "next/image";
+import AskCard from "../components/AskCard";
 import ChatWidget from "../components/ChatWidget";
 import portrait from "../public/nate.jpg";
 
@@ -33,9 +34,8 @@ export default function Home() {
         Don&apos;t code. <span className="text-white font-semibold">Build.</span>
       </p>
       <p className="max-w-xl text-zinc-400 leading-relaxed mb-10">
-        Senior Software Engineer at Meta. Previously Microsoft, Oracle, and
-        Pocket Gems. I build distributed systems, cloud infrastructure, and
-        the occasional thing just for fun.
+        Software developer at Meta. I build large scale systems and occasional
+        things just for fun.
       </p>
       <div className="flex gap-4 mb-16">
         <a
@@ -56,13 +56,8 @@ export default function Home() {
         </a>
       </div>
 
-      <section className="max-w-2xl w-full text-left border-t border-zinc-800 pt-10">
-        <h2 className="text-lg font-semibold mb-3">Ask me anything</h2>
-        <p className="text-zinc-400 text-sm leading-relaxed">
-          There&apos;s a chat widget in the corner — ask it about my background,
-          what I&apos;m working on, or anything else. It&apos;ll answer on my
-          behalf.
-        </p>
+      <section className="max-w-xl w-full border-t border-zinc-800 pt-10">
+        <AskCard />
       </section>
 
       <ChatWidget />

@@ -4,6 +4,9 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import avatar from "../public/avatar.jpg";
 
+/** Dispatch on window to open the chat from elsewhere on the page. */
+export const OPEN_CHAT_EVENT = "open-chat";
+
 type Message = { role: "user" | "assistant"; content: string };
 
 export default function ChatWidget() {
@@ -14,6 +17,12 @@ export default function ChatWidget() {
   const bottomRef = useRef<HTMLDivElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const openChat = () => setOpen(true);
+    window.addEventListener(OPEN_CHAT_EVENT, openChat);
+    return () => window.removeEventListener(OPEN_CHAT_EVENT, openChat);
+  }, []);
 
   // Close on a click/tap outside the panel (the toggle button handles itself)
   // or on Escape.
